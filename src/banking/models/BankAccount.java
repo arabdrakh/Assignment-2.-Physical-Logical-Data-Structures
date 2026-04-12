@@ -1,3 +1,5 @@
+package banking.models;
+
 public class BankAccount {
     private String accountNumber;
     private String username;
