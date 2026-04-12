@@ -1,5 +1,6 @@
 # Assignment 2
 -*Name: Abdrakhmanova Aruzhan*
+
 -*Group: IT-2501*
 
 ## Output Examples
