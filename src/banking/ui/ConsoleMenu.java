@@ -27,17 +27,18 @@ public class ConsoleMenu {
             System.out.println("0 — Exit");
             System.out.print("Choose: ");
 
-    // --------------- Task 1 – Bank Account Storage (LinkedList) ---------------
-
-    static void addAccount() {
-        System.out.print("Account number: ");
-        String number = scanner.nextLine();
-        System.out.print("Username: ");
-        String name = scanner.nextLine();
-        System.out.print("Initial balance: ");
-        double balance = Double.parseDouble(scanner.nextLine());
-        accounts.add(new BankAccount(number, name, balance));
-        System.out.println("Account added\n");
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1" -> runPart1();
+                case "2" -> runPart2();
+                case "3" -> runPart3();
+                case "0" -> {
+                    System.out.println("thx");
+                    return;
+                }
+                default -> System.out.println("Invalid");
+            }
+        }
     }
 
     private void runPart1() {
@@ -108,16 +109,15 @@ public class ConsoleMenu {
     private void displayAllAccounts() {
         List<BankAccount> accounts = service.getAllAccounts();
         if (accounts.isEmpty()) {
-            System.out.println("No accounts found.\n");
+            System.out.println("No accounts found.");
             return;
         }
         System.out.println("Accounts List:");
-        int index = 1;
+        int i = 1;
         for (BankAccount acc : accounts) {
-            System.out.println(index + ". " + acc);
-            index++;
+            System.out.println(i + ". " + acc);
+            i++;
         }
-        System.out.println();
     }
 
     private void searchByUsername() {
@@ -248,7 +248,6 @@ public class ConsoleMenu {
         for (int i = history.size() - 1; i >= 0; i--) {
             System.out.println("  " + (history.size() - i) + ". " + history.get(i));
         }
-        System.out.println();
     }
 
     private void task4Menu() {
@@ -296,7 +295,7 @@ public class ConsoleMenu {
         if (remaining != null) {
             System.out.println("Remaining: " + remaining);
         } else {
-            System.out.println("Last transaction: " + transactionHistory.peek() + "\n");
+            System.out.println("No more bills remaining.");
         }
     }
 
@@ -376,124 +375,73 @@ public class ConsoleMenu {
 
         BankAccount[] bankArray = service.getPredefinedAccountsArray();
 
-        for (int i = 0; i < fixedAccounts.length; i++) {
-            System.out.println((i + 1) + ". " + fixedAccounts[i]);
+        System.out.println("Predefined accounts stored in array BankAccount[3]:");
+        for (int i = 0; i < bankArray.length; i++) {
+            System.out.println((i + 1) + ". " + bankArray[i]);
         }
-        System.out.println();
     }
 
     private void runPart3() {
         while (true) {
-            System.out.println("BANK MENU");
-            System.out.println("1 – Add new account");          // Task 1
-            System.out.println("2 – Display all accounts");     // Task 1
-            System.out.println("3 – Search account");           // Task 1
-            System.out.println("4 – Deposit money");            // Task 2
-            System.out.println("5 – Withdraw money");           // Task 2
-            System.out.println("6 – Transaction history");      // Task 3
-            System.out.println("7 – Add bill payment");         // Task 4
-            System.out.println("8 – Submit account request");   // Task 5
-            System.out.println("0 – Back");
+            System.out.println("MINI BANKING SYSTEM");
+            System.out.println("1 — Enter Bank");
+            System.out.println("2 — Enter ATM");
+            System.out.println("3 — Admin Area");
+            System.out.println("4 — Exit");
             System.out.print("Choose: ");
-            String choice = scanner.nextLine();
 
+            String choice = scanner.nextLine().trim();
             switch (choice) {
-                case "1":
-                    addAccount();
-                    break;
-                case "2":
-                    displayAllAccounts();
-                    break;
-                case "3":
-                    searchAccountMenu();
-                    break;
-                case "4":
-                    deposit();
-                    break;
-                case "5":
-                    withdraw();
-                    break;
-                case "6":
-                    peekLastTransaction();
-                    showTransactionHistory();
-                    break;
-                case "7":
-                    addBillPayment();
-                    break;
-                case "8":
-                    submitAccountRequest();
-                    break;
-                case "0":
+                case "1" -> bankMenu();
+                case "2" -> atmMenu();
+                case "3" -> adminMenu();
+                case "4" -> {
+                    System.out.println("Exiting Mini Banking System...");
                     return;
-                default:
-                    System.out.println("Invalid option.\n");
+                }
+                default -> System.out.println("Invalid choice. Try again.");
             }
         }
     }
 
     private void bankMenu() {
         while (true) {
-            System.out.println("ATM MENU");
-            System.out.println("1 – Balance enquiry");
-            System.out.println("2 – Withdraw");
-            System.out.println("0 – Back");
+            System.out.println("\n Bank Menu");
+            System.out.println("1 — Submit account opening request");
+            System.out.println("2 — Deposit money");
+            System.out.println("3 — Withdraw money");
+            System.out.println("0 — Back");
             System.out.print("Choose: ");
-            String choice = scanner.nextLine();
 
+            String choice = scanner.nextLine().trim();
             switch (choice) {
-                case "1":
-                    System.out.print("Enter username: ");
-                    String name = scanner.nextLine();
-                    BankAccount acc = searchByUsername(name);
-                    if (acc != null) {
-                        System.out.println("Balance: " + (int) acc.getBalance() + "\n");
-                    } else {
-                        System.out.println("Account not found.\n");
-                    }
-                    break;
-                case "2":
-                    withdraw();
-                    break;
-                case "0":
+                case "1" -> submitAccountRequest();
+                case "2" -> depositMoney();
+                case "3" -> withdrawMoney();
+                case "0" -> {
                     return;
-                default:
-                    System.out.println("Invalid option.\n");
+                }
+                default -> System.out.println("Invalid choice.");
             }
         }
     }
 
     private void atmMenu() {
         while (true) {
-            System.out.println("ADMIN MENU");
-            System.out.println("1 – View pending account requests");
-            System.out.println("2 – Process next account request");
-            System.out.println("3 – View bill payment queue");
-            System.out.println("4 – Process next bill payment");
-            System.out.println("5 – Undo last transaction");
-            System.out.println("0 – Back");
+            System.out.println("\n ATM Menu");
+            System.out.println("1 — Balance enquiry");
+            System.out.println("2 — Withdraw");
+            System.out.println("0 — Back");
             System.out.print("Choose: ");
-            String choice = scanner.nextLine();
 
+            String choice = scanner.nextLine().trim();
             switch (choice) {
-                case "1":
-                    displayPendingRequests();
-                    break;
-                case "2":
-                    processAccountRequest();
-                    break;
-                case "3":
-                    displayBillQueue();
-                    break;
-                case "4":
-                    processNextBill();
-                    break;
-                case "5":
-                    undoLastTransaction();
-                    break;
-                case "0":
+                case "1" -> balanceEnquiry();
+                case "2" -> withdrawMoney();
+                case "0" -> {
                     return;
-                default:
-                    System.out.println("Invalid option.\n");
+                }
+                default -> System.out.println("Invalid");
             }
         }
     }
@@ -513,29 +461,24 @@ public class ConsoleMenu {
 
     private void adminMenu() {
         while (true) {
-            System.out.println("       WELCOME TO BANKING SYSTEM       ");
-            System.out.println("1 – Enter Bank");
-            System.out.println("2 – Enter ATM");
-            System.out.println("3 – Admin Area");
-            System.out.println("4 – Exit");
+            System.out.println("\n Admin Area");
+            System.out.println("1 — View pending account requests");
+            System.out.println("2 — Process next account request");
+            System.out.println("3 — View bill payment queue");
+            System.out.println("4 — Process next bill payment");
+            System.out.println("0 — Back");
             System.out.print("Choose: ");
-            String choice = scanner.nextLine();
 
+            String choice = scanner.nextLine().trim();
             switch (choice) {
-                case "1":
-                    bankMenu();
-                    break;
-                case "2":
-                    atmMenu();
-                    break;
-                case "3":
-                    adminMenu();
-                    break;
-                case "4":
-                    System.out.println("Thank you for using Banking System. Goodbye!");
+                case "1" -> displayPendingRequests();
+                case "2" -> processAccountRequest();
+                case "3" -> displayBillQueue();
+                case "4" -> processNextBill();
+                case "0" -> {
                     return;
-                default:
-                    System.out.println("Invalid option. Please try again.\n");
+                }
+                default -> System.out.println("Invalid");
             }
         }
     }
