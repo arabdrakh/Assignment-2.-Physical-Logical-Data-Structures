@@ -20,7 +20,6 @@ public class BankingService {
         this.accountRequests = new LinkedList<>();
     }
 
-    // Task 1: Bank Account Storage
     public void addAccount(String accNum, String username, double balance) {
         accounts.add(new BankAccount(accNum, username, balance));
     }
@@ -35,10 +34,9 @@ public class BankingService {
                 return acc;
             }
         }
-        return null; // Not found
+        return null;
     }
 
-    // Task 2: Deposit & Withdraw
     public BankAccount depositMoney(String username, double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive.");
@@ -68,7 +66,6 @@ public class BankingService {
         return acc;
     }
 
-    // Task 3: Transaction History
     public void addTransaction(String description) {
         if (description == null || description.trim().isEmpty()) {
             throw new IllegalArgumentException("Transaction description cannot be empty.");
@@ -94,7 +91,6 @@ public class BankingService {
         return transactionHistory;
     }
 
-    // Task 4: Bill Payment Queue
     public void addBillPayment(String billName) {
         if (billName == null || billName.trim().isEmpty()) {
             throw new IllegalArgumentException("Bill name cannot be empty.");
@@ -122,7 +118,6 @@ public class BankingService {
         return billQueue;
     }
 
-    // Task 5: Account Opening Queue
     public void submitAccountRequest(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty.");
@@ -145,7 +140,6 @@ public class BankingService {
         return accountRequests;
     }
 
-    // Task 6: Physical Data Structures (Array)
     public BankAccount[] getPredefinedAccountsArray() {
         BankAccount[] bankArray = new BankAccount[3];
         bankArray[0] = new BankAccount("ACC001", "Ali", 150000);
