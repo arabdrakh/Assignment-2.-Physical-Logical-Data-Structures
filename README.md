@@ -1,272 +1,60 @@
-# Assignment 2 — Physical & Logical Data Structures (Banking System)
+# Assignment 2
+Name: Abdrakhmanova Aruzhan
+Group: IT-2501
 
-**Student:** Abdrakhmanova Aruzhan  
-**Group:** IT-2501
+## Output Examples
 
----
+### Part 1
 
-## Table of Contents
-- [How to Run](#how-to-run)
-- [Part 1 — Logical Data Structures](#part-1--logical-data-structures)
-  - [Task 1: Bank Account Storage (LinkedList)](#task-1-bank-account-storage-using-linkedlist)
-  - [Task 2: Deposit & Withdraw](#task-2--deposit--withdraw-operations)
-  - [Task 3: Transaction History (Stack)](#task-3--transaction-history-stack--lifo)
-  - [Task 4: Bill Payment Queue](#task-4--bill-payment-queue-queue--fifo)
-  - [Task 5: Account Opening Queue](#task-5--account-opening-queue-admin-simulation)
-- [Part 2 — Physical Data Structures](#part-2--physical-data-structures)
-  - [Task 6: Array Storage](#task-6-array-storage)
-- [Part 3 — Mini Banking Menu](#part-3--mini-banking-menu)
-- [Summary](#summary)
+#### task 1
+we need to create a class BankAccount with accountNumber, username, balance and store accounts in a LinkedList. i created a separate class BankAccount.java with private fields and getters/setters. `private String accountNumber;` `private String username;` `private double balance;`. i used private because it is good practice to hide internal data and access through methods. in Main.java i declared `static LinkedList<BankAccount> accounts = new LinkedList<>();` to store all accounts dynamically. LinkedList is good here because we dont know how many accounts there will be, unlike array which has fixed size. function addAccount() asks user for account number, username and balance then does `accounts.add(new BankAccount(number, name, balance));` which adds the new account to the end of the list. displayAllAccounts() uses a for-each loop `for (BankAccount acc : accounts)` to go through all accounts and print them one by one. searchByUsername() also loops through all accounts but uses `acc.getUsername().equalsIgnoreCase(username)` to find a match. i used equalsIgnoreCase so it works even if user types "ali" instead of "Ali".
 
----
+![img_5.png](img_5.png)![img_6.png](img_6.png)
+#### task 2
+this task extends task 1 to allow deposit and withdraw operations. in deposit() i first search for the account by username using searchByUsername(). if account is not found `if (acc == null)` it prints "Account not found" and returns. if found, it asks for the amount and does `acc.setBalance(acc.getBalance() + amount);` to update the balance directly inside the LinkedList node. no need to remove and re-add, because LinkedList stores references to objects so changing the object changes it everywhere. withdraw() works the same but subtracts and also checks `if (amount <= 0 || amount > acc.getBalance())` to make sure user has enough money and doesnt enter negative numbers. i used Double.parseDouble(scanner.nextLine()) instead of scanner.nextDouble() because nextDouble leaves a newline in the buffer and messes up the next nextLine() call.
 
-## How to Run
+![img_9.png](img_9.png)![img_10.png](img_10.png)
 
-1. Open the project in **IntelliJ IDEA**
-2. Navigate to `src/Main.java`
-3. Click the **Run** (▶) button or press `Shift+F10`
+#### task 3
+this task adds transaction history using a Stack. i declared `static Stack<String> transactionHistory = new Stack<>();` at the top. Stack is LIFO (last in first out) which makes sense for transaction history because the most recent transaction should be on top. every time deposit or withdraw happens, i push a string to the stack like `transactionHistory.push("Deposit " + (int) amount + " to " + name);`. peekLastTransaction() uses `transactionHistory.peek()` to see the last transaction without removing it. undoLastTransaction() uses `transactionHistory.pop()` which removes and returns the last transaction. showTransactionHistory() prints all transactions from most recent to oldest using `for (int i = transactionHistory.size() - 1; i >= 0; i--)`. i used (int) amount to cast double to int so it prints 50000 instead of 50000.0 which looks cleaner.
 
-Alternatively, compile and run from terminal:
-```bash
-javac src/BankAccount.java src/Main.java -d out
-java -cp out Main
-```
+![img_12.png](img_12.png)![img_13.png](img_13.png)
 
----
+#### task 4
+this task creates a bill payment queue using Queue interface. i declared `static Queue<String> billQueue = new LinkedList<>();`. Queue is FIFO (first in first out) which is perfect for bill payments because whoever submits first should be processed first, like a real queue in a bank. addBillPayment() asks for bill name and does `billQueue.add(bill);` to add it to the end of the queue. processNextBill() uses `billQueue.poll()` which removes and returns the first element from the queue. if queue is empty poll() returns null but i check `billQueue.isEmpty()` before calling it. after processing i also push the bill to transactionHistory stack so it appears in the history. i used LinkedList as the implementation of Queue because LinkedList implements the Queue interface in java.
 
-## Part 1 — Logical Data Structures
+![img_14.png](img_14.png)![img_15.png](img_15.png)
 
-### Task 1: Bank Account Storage Using LinkedList
+#### task 5
+this task simulates account opening requests. user submits a request which goes into `static Queue<String> accountRequests = new LinkedList<>();` and admin processes the queue. submitAccountRequest() takes a name and adds it to the queue with `accountRequests.add(name);`. processAccountRequest() uses `accountRequests.poll()` to get the first request, generates an account number like `"ACC" + (accounts.size() + 1)` and creates a new BankAccount with balance 0 and adds it to the main accounts LinkedList. this simulates a real banking workflow where a client submits an application and the bank employee approves it. displayPendingRequests() just prints the queue so admin can see whats waiting.
 
-**Description:** Created a `BankAccount` class with `accountNumber`, `username`, and `balance` fields. A `LinkedList<BankAccount>` stores all accounts. The user can add new accounts, display all accounts, and search by username.
+![img_16.png](img_16.png)![img_17.png](img_17.png)
 
-**Data structure used:** `LinkedList<BankAccount>` — allows dynamic resizing and efficient insertion of new accounts.
+### Part 2
 
-**Screenshot:**
+#### task 6
+this task demonstrates physical data structure using a fixed-size array. i created `BankAccount[] fixedAccounts = new BankAccount[3];` with exactly 3 elements. then stored 3 predefined accounts: Ali with 150000, Sara with 220000, Omar with 310000. the difference from LinkedList is that array has fixed size allocated in memory at creation time. you cannot add a 4th element to BankAccount[3], you would need to create a new bigger array. LinkedList on the other hand can grow and shrink dynamically because each node just points to the next one in memory. this is the main difference between physical (array - fixed, contiguous memory) and logical (LinkedList - dynamic, nodes linked by references) data structures.
 
-```
---- Task 1: Bank Account Storage ---
-1 — Add a new account
-2 — Display all accounts
-3 — Search account by username
-0 — Back
-Choose: 1
-Enter account number: ACC001
-Enter username: Ali
-Enter initial balance: 150000
-Account added successfully
+![img_18.png](img_18.png)
 
-Choose: 1
-Enter account number: ACC002
-Enter username: Sara
-Enter initial balance: 220000
-Account added successfully
+### Part 3 – Mini Banking Menu
 
-Choose: 2
-Accounts List:
-1. Ali – Balance: 150000
-2. Sara – Balance: 220000
+this part integrates all tasks together into one menu-driven program. in main() i first call task6PhysicalArray() to demonstrate the array, then preload 2 sample accounts (Ali and Sara) so the user can immediately test deposit/withdraw without creating accounts first. the main menu has 4 options: 1 – Enter Bank, 2 – Enter ATM, 3 – Admin Area, 4 – Exit. i used a while(true) loop with switch-case for the menu. each sub-menu also has its own while(true) loop so the user stays in the sub-menu until they choose 0 to go back. i read input as String with scanner.nextLine() and compare with switch(choice) case "1" etc., this way if user types something random like "abc" it just falls to default case and prints "Invalid option" instead of crashing.
 
-Choose: 3
-Enter username to search: Ali
-Found: Ali – Balance: 150000
-```
+Bank Menu has: submit account request (goes to queue), deposit, withdraw, display all accounts, search account, transaction history, add bill payment. it uses LinkedList for accounts and Stack for history.
 
----
+ATM Menu has: balance enquiry and withdraw. balance enquiry asks for username, finds the account with searchByUsername() and prints the balance. withdraw reuses the same withdraw() function from task 2.
 
-### Task 2 – Deposit & Withdraw Operations
+Admin Menu has: view pending account requests, process next request, view bill queue, process next bill, undo last transaction. this is where queue processing happens.
 
-**Description:** Extended Task 1 to allow depositing and withdrawing money. The balance is updated directly inside the LinkedList node.
-
-**Screenshot:**
-
-```
---- Task 2: Deposit & Withdraw ---
-Choose: 1
-Enter username: Ali
-Deposit: 50000
-New balance: 200000
-
-Choose: 2
-Enter username: Ali
-Withdraw: 20000
-New balance: 180000
-```
-
----
-
-### Task 3 – Transaction History (Stack – LIFO)
-
-**Description:** Created a `Stack<String>` to store transaction records. Supports adding transactions, viewing the last one (peek), undoing the last transaction (pop), and displaying the full history.
-
-**Data structure used:** `Stack<String>` — Last-In-First-Out structure, perfect for undo functionality.
-
-**Screenshot:**
-
-```
---- Task 3: Transaction History (Stack) ---
-Choose: 2
-Last transaction: Withdraw 20000 from Ali
-
-Choose: 3
-Undo → Withdraw 20000 from Ali removed
-
-Choose: 4
-Transaction History (most recent first):
-  1. Deposit 50000 to Ali
-```
-
----
-
-### Task 4 – Bill Payment Queue (Queue – FIFO)
-
-**Description:** Created a `Queue<String>` using `LinkedList` to manage bill payments. Bills are processed in the order they were added (FIFO).
-
-**Data structure used:** `Queue<String>` (backed by `LinkedList`) — First-In-First-Out, simulates real queue behavior.
-
-**Screenshot:**
-
-```
---- Task 4: Bill Payment Queue ---
-Choose: 1
-Enter bill name: Electricity Bill
-Added: Electricity Bill
-
-Choose: 1
-Enter bill name: Internet Bill
-Added: Internet Bill
-
-Choose: 2
-Processing: Electricity Bill
-Remaining: Internet Bill
-
-Choose: 3
-Bill Payment Queue:
-  1. Internet Bill
-```
-
----
-
-### Task 5 – Account Opening Queue (Admin Simulation)
-
-**Description:** Created a `Queue<String>` for account opening requests. Users submit a request, and the admin processes the queue — each processed request creates a new `BankAccount` in the main `LinkedList`.
-
-**Data structure used:** `Queue<String>` — simulates a real bank workflow where customers wait in line for account approval.
-
-**Screenshot:**
-
-```
---- Task 5: Account Opening Queue ---
-Choose: 1
-Enter your name for account request: Omar
-Request submitted for: Omar
-
-Choose: 2
-Request processed! Account created for Omar
-  Account Number: ACC1003, Balance: 0
-
-Choose: 3
-No pending requests.
-```
-
----
-
-## Part 2 — Physical Data Structures
-
-### Task 6: Array Storage
-
-**Description:** Created a fixed-size array `BankAccount[3]` with 3 predefined accounts and printed them. This demonstrates physical (fixed) data structures vs. logical (dynamic) ones.
-
-**Data structure used:** `BankAccount[]` — fixed-size array allocated in contiguous memory.
-
-**Screenshot:**
-
-```
---- Part 2 / Task 6: Physical Data Structures (Array) ---
-Predefined accounts stored in array BankAccount[3]:
-1. Ali – Balance: 150000
-2. Sara – Balance: 220000
-3. Omar – Balance: 180000
-```
-
----
-
-## Part 3 — Mini Banking Menu
-
-**Description:** Integrated all tasks into a unified menu system with three areas:
-
-| Menu | Features | Data Structures Used |
-|------|----------|---------------------|
-| **Bank** | Submit account request, Deposit, Withdraw | LinkedList, Stack, Queue |
-| **ATM** | Balance enquiry, Withdraw | LinkedList, Stack |
-| **Admin** | Process account requests, Process bill payments | Queue (both queues) |
-
-**Screenshot — Main Menu:**
-
-```
-========================================
-  MINI BANKING SYSTEM
-========================================
-1 — Enter Bank
-2 — Enter ATM
-3 — Admin Area
-4 — Exit
-```
-
-**Screenshot — Bank Menu (submit request → admin processes):**
-
-```
---- Bank Menu ---
-Choose: 1
-Enter your name for account request: Marat
-Request submitted for: Marat
-
---- Admin Area ---
-Choose: 1
-Pending Account Requests:
-  1. Marat
-
-Choose: 2
-Request processed! Account created for Marat
-  Account Number: ACC1004, Balance: 0
-```
-
-**Screenshot — ATM Menu:**
-
-```
---- ATM Menu ---
-Choose: 1
-Enter username: Ali
-Account: Ali
-Balance: 180000
-```
-
----
+![img_19.png](img_19.png)![img_20.png](img_20.png)
 
 ## Summary
+in this assignment i practiced working with different data structures in java:
 
-### Data Structures Used
+- LinkedList for dynamic account storage where we can add/remove accounts without worrying about size
+- Stack (LIFO) for transaction history where the last action is always on top and can be undone
+- Queue (FIFO) for bill payments and account requests where first come first served
+- Array for fixed-size physical storage to understand the difference with dynamic structures
 
-| Structure | Java Type | Purpose | Part/Task |
-|-----------|-----------|---------|-----------|
-| **LinkedList** | `LinkedList<BankAccount>` | Dynamic account storage; add/search/update | Tasks 1, 2, 5, Part 3 |
-| **Stack** | `Stack<String>` | Transaction history with LIFO undo | Task 3, Part 3 |
-| **Queue** | `Queue<String>` (LinkedList) | Bill payments & account requests (FIFO) | Tasks 4, 5, Part 3 |
-| **Array** | `BankAccount[3]` | Fixed-size predefined account storage | Task 6 |
-
-### Work Process
-
-1. **Created the `BankAccount` class** with `accountNumber`, `username`, and `balance` fields, along with getters, setters, and a `toString()` method.
-
-2. **Implemented Tasks 1–5** as individual menus that demonstrate each logical data structure (LinkedList, Stack, Queue). Each task builds upon the shared data to show how the structures interact.
-
-3. **Implemented Task 6** to demonstrate a physical (array-based) data structure with fixed size, contrasting it with the dynamic LinkedList used in earlier tasks.
-
-4. **Built the Mini Banking Menu (Part 3)** that integrates all data structures into a realistic banking simulation with Bank, ATM, and Admin areas.
-
-5. **Tested the program** with sample inputs to ensure all operations produce the correct outputs: adding accounts, deposits, withdrawals, transaction history with undo, bill payment queue processing, and account request queue processing.
-
-### Key Differences: Physical vs Logical Data Structures
-
-- **Physical (Array):** Fixed size, contiguous memory, fast random access. Cannot grow or shrink at runtime.
-- **Logical (LinkedList, Stack, Queue):** Dynamic size, node-based memory, flexible for varying amounts of data. Stack provides LIFO behavior for undo; Queue provides FIFO behavior for fair processing order.
+the most challenging part for me was understanding how Queue and LinkedList work together, because in java LinkedList implements the Queue interface so the same class can behave as both a list and a queue depending on which methods you use. also integrating everything into one menu system with multiple sub-menus took some time to organize properly. i used knowledge from previous assignments and oop concepts like encapsulation (private fields, getters/setters) to structure the BankAccount class. overall this assignment helped me understand when to use which data structure and how memory organization (physical vs logical) affects program behavior.

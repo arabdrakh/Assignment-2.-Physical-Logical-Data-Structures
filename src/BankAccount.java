@@ -27,6 +27,6 @@ public class BankAccount {
 
     @Override
     public String toString() {
-        return username + " – Balance: " + String.format("%.0f", balance);
+        return username + " – Balance: " + (int) balance;
     }
 }
