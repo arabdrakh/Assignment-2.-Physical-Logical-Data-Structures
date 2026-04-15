@@ -48,7 +48,7 @@ public class BankingService {
             throw new IllegalArgumentException("Account not found.");
         }
         acc.setBalance(acc.getBalance() + amount);
-        addTransaction("Deposit " + String.format("%.0f", amount) + " to " + username);
+        addTransaction("Deposit " +  amount + " to " + username);
         return acc;
     }
 
@@ -62,10 +62,10 @@ public class BankingService {
         }
         if (amount > acc.getBalance()) {
             throw new IllegalArgumentException(
-                    "Insufficient funds. Current balance: " + String.format("%.0f", acc.getBalance()));
+                    "Insufficient funds. Current balance: " +  acc.getBalance());
         }
         acc.setBalance(acc.getBalance() - amount);
-        addTransaction("Withdraw " + String.format("%.0f", amount) + " from " + username);
+        addTransaction("Withdraw " + amount + " from " + username);
         return acc;
     }
 
@@ -147,7 +147,7 @@ public class BankingService {
     }
 
     // Abdrakhmanova Aruzhan 6
-    public BankAccount[] getPredefinedAccountsArray() {
+    public BankAccount[] getAccountsArray() {
         BankAccount[] bankArray = new BankAccount[3];
         bankArray[0] = new BankAccount("ACC001", "Ali", 150000);
         bankArray[1] = new BankAccount("ACC002", "Sara", 220000);

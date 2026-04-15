@@ -116,7 +116,6 @@ public class ConsoleMenu {
         }
     }
 
-    // --- Task Implementations ---
 
     private void addAccount() {
         System.out.print("Enter account number: ");
@@ -314,7 +313,7 @@ public class ConsoleMenu {
 
     private void displayPredefinedAccounts() {
         System.out.println("\n Task 6: Physical Data Structures (Array)");
-        BankAccount[] bankArray = service.getPredefinedAccountsArray();
+        BankAccount[] bankArray = service.getAccountsArray();
 
         System.out.println("Predefined accounts stored in array BankAccount[3]:");
         for (int i = 0; i < bankArray.length; i++) {
