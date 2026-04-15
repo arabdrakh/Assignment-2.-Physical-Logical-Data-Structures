@@ -19,75 +19,104 @@ public class ConsoleMenu {
 
     public void start() {
         while (true) {
-            System.out.println("  BANKING SYSTEM — Main Menu");
-            System.out.println(" ");
-            System.out.println("1 — Part 1: Logical Data Structures");
-            System.out.println("2 — Part 2: Physical Data Structures");
-            System.out.println("3 — Part 3: Mini Banking Menu");
+            System.out.println("\n  MINI BANKING SYSTEM");
+            System.out.println("1 — Enter Bank");
+            System.out.println("2 — Enter ATM");
+            System.out.println("3 — Admin Area");
             System.out.println("0 — Exit");
             System.out.print("Choose: ");
 
             String choice = scanner.nextLine().trim();
             switch (choice) {
-                case "1" -> runPart1();
-                case "2" -> runPart2();
-                case "3" -> runPart3();
+                case "1" -> bankMenu();
+                case "2" -> atmMenu();
+                case "3" -> adminMenu();
                 case "0" -> {
                     System.out.println("thx");
                     return;
                 }
-                default -> System.out.println("Invalid");
+                default -> System.out.println("no");
             }
         }
     }
 
-    private void runPart1() {
+    private void bankMenu() {
         while (true) {
-            System.out.println("\nPart 1: Logical Data Structures");
-            System.out.println("1 — Task 1: Bank Account Storage");
-            System.out.println("2 — Task 2: Deposit & Withdraw");
-            System.out.println("3 — Task 3: Transaction History");
-            System.out.println("4 — Task 4: Bill Payment Queue");
-            System.out.println("5 — Task 5: Account Opening Queue");
-            System.out.println("0 — Back");
-            System.out.print("Choose task: ");
-
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> task1Menu();
-                case "2" -> task2Menu();
-                case "3" -> task3Menu();
-                case "4" -> task4Menu();
-                case "5" -> task5Menu();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid");
-            }
-        }
-    }
-
-    private void task1Menu() {
-        while (true) {
-            System.out.println("\nTask 1: Bank Account Storage");
-            System.out.println("1 — Add a new account");
-            System.out.println("2 — Display all accounts");
-            System.out.println("3 — Search account by username");
+            System.out.println("\n Bank Menu");
+            System.out.println("1 — [Task 1] Add a new account directly");
+            System.out.println("2 — [Task 2] Deposit money");
+            System.out.println("3 — [Task 2] Withdraw money");
+            System.out.println("4 — [Task 3] Add custom transaction");
+            System.out.println("5 — [Task 4] Add bill payment request");
+            System.out.println("6 — [Task 5] Submit account opening request");
             System.out.println("0 — Back");
             System.out.print("Choose: ");
 
             String choice = scanner.nextLine().trim();
             switch (choice) {
                 case "1" -> addAccount();
-                case "2" -> displayAllAccounts();
-                case "3" -> searchByUsername();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid");
+                case "2" -> depositMoney();
+                case "3" -> withdrawMoney();
+                case "4" -> addTransaction();
+                case "5" -> addBillPayment();
+                case "6" -> submitAccountRequest();
+                case "0" -> { return; }
+                default -> System.out.println("no");
             }
         }
     }
+
+    private void atmMenu() {
+        while (true) {
+            System.out.println("\n ATM Menu");
+            System.out.println("1 — [Task 1] Balance enquiry");
+            System.out.println("2 — [Task 2] Withdraw money");
+            System.out.println("0 — Back");
+            System.out.print("Choose: ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1" -> balanceEnquiry();
+                case "2" -> withdrawMoney();
+                case "0" -> { return; }
+                default -> System.out.println("no");
+            }
+        }
+    }
+
+    private void adminMenu() {
+        while (true) {
+            System.out.println("\n Admin Area");
+            System.out.println("1 — [Task 1] Display all accounts");
+            System.out.println("2 — [Task 3] Display transaction history");
+            System.out.println("3 — [Task 3] Peek last transaction");
+            System.out.println("4 — [Task 3] Undo last transaction");
+            System.out.println("5 — [Task 4] Display bill payment queue");
+            System.out.println("6 — [Task 4] Process next bill payment");
+            System.out.println("7 — [Task 5] Display pending account requests");
+            System.out.println("8 — [Task 5] Process next account request");
+            System.out.println("9 — [Task 6] View predefined accounts array");
+            System.out.println("0 — Back");
+            System.out.print("Choose: ");
+
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1" -> displayAllAccounts();
+                case "2" -> displayAllTransactions();
+                case "3" -> peekTransaction();
+                case "4" -> undoTransaction();
+                case "5" -> displayBillQueue();
+                case "6" -> processNextBill();
+                case "7" -> displayPendingRequests();
+                case "8" -> processAccountRequest();
+                case "9" -> displayPredefinedAccounts();
+                case "0" -> { return; }
+                default -> System.out.println("no");
+            }
+        }
+    }
+
+    // --- Task Implementations ---
 
     private void addAccount() {
         System.out.print("Enter account number: ");
@@ -99,56 +128,24 @@ public class ConsoleMenu {
         try {
             balance = Double.parseDouble(scanner.nextLine().trim());
         } catch (NumberFormatException e) {
-            System.out.println("Invalid balance");
+            System.out.println("no");
             return;
         }
         service.addAccount(accNum, username, balance);
-        System.out.println("Account added successfully");
+        System.out.println("Account added");
     }
 
     private void displayAllAccounts() {
         List<BankAccount> accounts = service.getAllAccounts();
         if (accounts.isEmpty()) {
-            System.out.println("No accounts found.");
+            System.out.println("No accounts");
             return;
         }
-        System.out.println("Accounts List:");
+        System.out.println("Accounts:");
         int i = 1;
         for (BankAccount acc : accounts) {
             System.out.println(i + ". " + acc);
             i++;
-        }
-    }
-
-    private void searchByUsername() {
-        System.out.print("Enter username to search: ");
-        String name = scanner.nextLine().trim();
-        BankAccount acc = service.findAccountByUsername(name);
-        
-        if (acc != null) {
-            System.out.println("Found: " + acc);
-        } else {
-            System.out.println("Account not found for username: " + name);
-        }
-    }
-
-    private void task2Menu() {
-        while (true) {
-            System.out.println("\nTask 2: Deposit & Withdraw");
-            System.out.println("1 — Deposit money");
-            System.out.println("2 — Withdraw money");
-            System.out.println("0 — Back");
-            System.out.print("Choose: ");
-
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> depositMoney();
-                case "2" -> withdrawMoney();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid");
-            }
         }
     }
 
@@ -162,7 +159,7 @@ public class ConsoleMenu {
             BankAccount acc = service.depositMoney(username, amount);
             System.out.println("New balance: " + String.format("%.0f", acc.getBalance()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid amount.");
+            System.out.println("no");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
@@ -178,39 +175,15 @@ public class ConsoleMenu {
             BankAccount acc = service.withdrawMoney(username, amount);
             System.out.println("New balance: " + String.format("%.0f", acc.getBalance()));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid amount.");
+            System.out.println("no");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private void task3Menu() {
-        while (true) {
-            System.out.println("\nTask 3: Transaction History");
-            System.out.println("1 — Add transaction");
-            System.out.println("2 — Display last transaction (peek)");
-            System.out.println("3 — Undo last transaction (pop)");
-            System.out.println("4 — Display all transactions");
-            System.out.println("0 — Back");
-            System.out.print("Choose: ");
-
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> addTransaction();
-                case "2" -> peekTransaction();
-                case "3" -> undoTransaction();
-                case "4" -> displayAllTransactions();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid");
-            }
-        }
-    }
-
     private void addTransaction() {
         System.out.println("Transaction types: Deposit, Withdraw, Bill payment");
-        System.out.print("Enter transaction description: ");
+        System.out.print("Enter transaction: ");
         String desc = scanner.nextLine().trim();
         try {
             service.addTransaction(desc);
@@ -247,28 +220,6 @@ public class ConsoleMenu {
         System.out.println("Transaction History (most recent first):");
         for (int i = history.size() - 1; i >= 0; i--) {
             System.out.println("  " + (history.size() - i) + ". " + history.get(i));
-        }
-    }
-
-    private void task4Menu() {
-        while (true) {
-            System.out.println("\nTask 4: Bill Payment Queue");
-            System.out.println("1 — Add bill payment request");
-            System.out.println("2 — Process next bill payment");
-            System.out.println("3 — Display queue");
-            System.out.println("0 — Back");
-            System.out.print("Choose: ");
-
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> addBillPayment();
-                case "2" -> processNextBill();
-                case "3" -> displayBillQueue();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid");
-            }
         }
     }
 
@@ -313,28 +264,6 @@ public class ConsoleMenu {
         }
     }
 
-    private void task5Menu() {
-        while (true) {
-            System.out.println("\nTask 5: Account Opening Queue");
-            System.out.println("1 — Submit account request");
-            System.out.println("2 — Process next request (Admin)");
-            System.out.println("3 — Display pending requests");
-            System.out.println("0 — Back");
-            System.out.print("Choose: ");
-
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> submitAccountRequest();
-                case "2" -> processAccountRequest();
-                case "3" -> displayPendingRequests();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid");
-            }
-        }
-    }
-
     private void submitAccountRequest() {
         System.out.print("Enter your name for account request: ");
         String name = scanner.nextLine().trim();
@@ -370,82 +299,6 @@ public class ConsoleMenu {
         }
     }
 
-    private void runPart2() {
-        System.out.println("\n Part 2 / Task 6: Physical Data Structures (Array)");
-
-        BankAccount[] bankArray = service.getPredefinedAccountsArray();
-
-        System.out.println("Predefined accounts stored in array BankAccount[3]:");
-        for (int i = 0; i < bankArray.length; i++) {
-            System.out.println((i + 1) + ". " + bankArray[i]);
-        }
-    }
-
-    private void runPart3() {
-        while (true) {
-            System.out.println("MINI BANKING SYSTEM");
-            System.out.println("1 — Enter Bank");
-            System.out.println("2 — Enter ATM");
-            System.out.println("3 — Admin Area");
-            System.out.println("4 — Exit");
-            System.out.print("Choose: ");
-
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> bankMenu();
-                case "2" -> atmMenu();
-                case "3" -> adminMenu();
-                case "4" -> {
-                    System.out.println("Exiting Mini Banking System...");
-                    return;
-                }
-                default -> System.out.println("Invalid choice. Try again.");
-            }
-        }
-    }
-
-    private void bankMenu() {
-        while (true) {
-            System.out.println("\n Bank Menu");
-            System.out.println("1 — Submit account opening request");
-            System.out.println("2 — Deposit money");
-            System.out.println("3 — Withdraw money");
-            System.out.println("0 — Back");
-            System.out.print("Choose: ");
-
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> submitAccountRequest();
-                case "2" -> depositMoney();
-                case "3" -> withdrawMoney();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid choice.");
-            }
-        }
-    }
-
-    private void atmMenu() {
-        while (true) {
-            System.out.println("\n ATM Menu");
-            System.out.println("1 — Balance enquiry");
-            System.out.println("2 — Withdraw");
-            System.out.println("0 — Back");
-            System.out.print("Choose: ");
-
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> balanceEnquiry();
-                case "2" -> withdrawMoney();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid");
-            }
-        }
-    }
-
     private void balanceEnquiry() {
         System.out.print("Enter username: ");
         String username = scanner.nextLine().trim();
@@ -459,27 +312,13 @@ public class ConsoleMenu {
         System.out.println("Balance: " + String.format("%.0f", acc.getBalance()));
     }
 
-    private void adminMenu() {
-        while (true) {
-            System.out.println("\n Admin Area");
-            System.out.println("1 — View pending account requests");
-            System.out.println("2 — Process next account request");
-            System.out.println("3 — View bill payment queue");
-            System.out.println("4 — Process next bill payment");
-            System.out.println("0 — Back");
-            System.out.print("Choose: ");
+    private void displayPredefinedAccounts() {
+        System.out.println("\n Task 6: Physical Data Structures (Array)");
+        BankAccount[] bankArray = service.getPredefinedAccountsArray();
 
-            String choice = scanner.nextLine().trim();
-            switch (choice) {
-                case "1" -> displayPendingRequests();
-                case "2" -> processAccountRequest();
-                case "3" -> displayBillQueue();
-                case "4" -> processNextBill();
-                case "0" -> {
-                    return;
-                }
-                default -> System.out.println("Invalid");
-            }
+        System.out.println("Predefined accounts stored in array BankAccount[3]:");
+        for (int i = 0; i < bankArray.length; i++) {
+            System.out.println((i + 1) + ". " + bankArray[i]);
         }
     }
 }

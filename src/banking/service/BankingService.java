@@ -20,6 +20,7 @@ public class BankingService {
         this.accountRequests = new LinkedList<>();
     }
 
+    // Abdrakhmanova Aruzhan 1
     public void addAccount(String accNum, String username, double balance) {
         accounts.add(new BankAccount(accNum, username, balance));
     }
@@ -37,6 +38,7 @@ public class BankingService {
         return null;
     }
 
+    // Abdrakhmanova Aruzhan 2
     public BankAccount depositMoney(String username, double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive.");
@@ -59,13 +61,15 @@ public class BankingService {
             throw new IllegalArgumentException("Account not found.");
         }
         if (amount > acc.getBalance()) {
-            throw new IllegalArgumentException("Insufficient funds. Current balance: " + String.format("%.0f", acc.getBalance()));
+            throw new IllegalArgumentException(
+                    "Insufficient funds. Current balance: " + String.format("%.0f", acc.getBalance()));
         }
         acc.setBalance(acc.getBalance() - amount);
         addTransaction("Withdraw " + String.format("%.0f", amount) + " from " + username);
         return acc;
     }
 
+    // Abdrakhmanova Aruzhan 3
     public void addTransaction(String description) {
         if (description == null || description.trim().isEmpty()) {
             throw new IllegalArgumentException("Transaction description cannot be empty.");
@@ -91,6 +95,7 @@ public class BankingService {
         return transactionHistory;
     }
 
+    // Abdrakhmanova Aruzhan 4
     public void addBillPayment(String billName) {
         if (billName == null || billName.trim().isEmpty()) {
             throw new IllegalArgumentException("Bill name cannot be empty.");
@@ -106,18 +111,19 @@ public class BankingService {
         addTransaction("Bill payment: " + processed);
         return processed;
     }
-    
+
     public String peekNextBill() {
         if (billQueue.isEmpty()) {
             return null;
         }
-       return billQueue.peek();
+        return billQueue.peek();
     }
 
     public Queue<String> getBillQueue() {
         return billQueue;
     }
 
+    // Abdrakhmanova Aruzhan 5
     public void submitAccountRequest(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be empty.");
@@ -140,6 +146,7 @@ public class BankingService {
         return accountRequests;
     }
 
+    // Abdrakhmanova Aruzhan 6
     public BankAccount[] getPredefinedAccountsArray() {
         BankAccount[] bankArray = new BankAccount[3];
         bankArray[0] = new BankAccount("ACC001", "Ali", 150000);
